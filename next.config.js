@@ -6,6 +6,9 @@ const nextConfig = {
         protocol: "https",
         hostname: "cdn.cosmicjs.com",
       },
+      {
+        hostname: "images.ctfassets.net",
+      },
     ],
   },
 };

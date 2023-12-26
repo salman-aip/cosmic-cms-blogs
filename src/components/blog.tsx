@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
 import { cosmic } from "@/lib/cosmic";
@@ -38,7 +37,6 @@ export default async function BlogPage({ slug }: blogProps) {
   await cosmic.objects
     .find({ type: `${process.env.NEXT_PUBLIC_OBJECT_TYPES}` })
     .then(({ objects }) => {
-      console.log(objects);
       blogs = objects;
     });
 
@@ -61,22 +59,27 @@ export default async function BlogPage({ slug }: blogProps) {
             >
               {blog.metadata.blog_published}
             </time>
-            <p className="mt-6 text-sm font-semibold text-neutral-950">
+            <div className="mt-6 text-sm font-semibold text-neutral-950">
               by {blog.metadata.author_name}, {blog.metadata.author_role}
-            </p>
+            </div>
           </header>
         </FadeIn>
 
         <FadeIn>
-          <div className="mx-auto mt-24 flex max-w-5xl flex-col sm:mt-32 lg:mt-40">
-            {blog.metadata.blog_description}
-          </div>
+          <div
+            className="mx-auto mt-24 flex max-w-5xl flex-col sm:mt-32 lg:mt-36"
+            dangerouslySetInnerHTML={{ __html: blog.metadata.blog_description }}
+          ></div>
         </FadeIn>
       </Container>
 
       {/* More blogs */}
       {blogs.length > 0 && (
-        <div className={clsx("relative mt-24 pt-24 sm:mt-32 sm:pt-32 lg:mt-40 lg:pt-40")}>
+        <div
+          className={clsx(
+            "relative mt-24 pt-24 sm:mt-32 sm:pt-32 lg:mt-40 lg:pt-40"
+          )}
+        >
           <div className="absolute inset-x-0 top-0 -z-10 h-[884px] overflow-hidden rounded-t-4xl bg-gradient-to-b from-neutral-50">
             <GridPattern
               className="absolute inset-0 h-full w-full fill-neutral-100 stroke-neutral-950/5 [mask-image:linear-gradient(to_bottom_left,white_40%,transparent_50%)]"
@@ -91,7 +94,10 @@ export default async function BlogPage({ slug }: blogProps) {
               {blogs.map((blog: any) => (
                 <FadeIn key={blog.id}>
                   <article key={blog.id}>
-                    <Border position="left" className="relative flex flex-col items-start pl-8">
+                    <Border
+                      position="left"
+                      className="relative flex flex-col items-start pl-8"
+                    >
                       <h3 className="mt-6 text-base font-semibold text-neutral-950">
                         {blog.metadata.blog_title}
                       </h3>

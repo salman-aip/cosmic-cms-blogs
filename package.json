@@ -1,5 +1,5 @@
 {
-  "name": "contentful-cms-blog",
+  "name": "cosmic-cms-blogs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,8 +11,6 @@
   "dependencies": {
     "@cosmicjs/sdk": "^1.0.11",
     "clsx": "^2.0.0",
-    "contentful": "^10.6.14",
-    "contentful-management": "^11.5.6",
     "framer-motion": "^10.16.12",
     "next": "14.0.3",
     "react": "^18",
