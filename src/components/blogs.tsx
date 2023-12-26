@@ -27,10 +27,18 @@ export default function BlogsPage() {
   const pageCount = Math.ceil(blogs.length / blogPerPage);
 
   useEffect(() => {
-    cosmic.objects.find({ type: "blog-posts" }).then(({ objects }) => {
-      console.log(objects);
+    cosmic.objects.find({ type: `${process.env.NEXT_PUBLIC_OBJECT_TYPES}` }).then(({ objects }) => {
       setBlogs(objects);
     });
+
+    cosmic.objects
+      .findOne({
+        type: `${process.env.NEXT_PUBLIC_OBJECT_TYPES}`,
+        slug: "why-you-should-go-cloud",
+      })
+      .then(({ object }) => {
+        console.log(object.metadata.blog_description);
+      });
   }, []);
 
   const handleChangePage = ({ selected }: any) => {
@@ -57,7 +65,7 @@ export default function BlogsPage() {
                       <div className="pt-10 lg:w-2/3 lg:flex-none lg:px-4 lg:pt-0">
                         <h2 className="font-display text-2xl font-semibold text-neutral-950">
                           <Link
-                            href={`/${blog.id}`}
+                            href={`/${blog.slug}`}
                             // as={`/blog/${blog.fields.blog_title}`}
                           >
                             {blog.metadata.blog_title}
@@ -91,8 +99,8 @@ export default function BlogsPage() {
                           {blog.metadata.blog_sub_title}
                         </p>
                         <Button
-                          href={`/${blog.id}`}
-                          aria-label={`Read more: ${blog.fileds?.blog_title}`}
+                          href={`/${blog.slug}`}
+                          aria-label={`Read more: ${blog.metadata?.blog_title}`}
                           className="mt-8"
                           // as={`/blog/${blog.fields.blog_title}`}
                         >

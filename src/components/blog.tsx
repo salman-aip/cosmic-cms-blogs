@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
-import { client } from "@/lib/contentful";
+import { cosmic } from "@/lib/cosmic";
 
 import { Container } from "./Container";
 import { FadeIn, FadeInStagger } from "./FadeIn";
@@ -19,24 +19,27 @@ export const metadata: Metadata = {
 };
 
 interface blogProps {
-  id: string;
+  slug: string;
 }
 
-export default async function BlogPage({ id }: blogProps) {
+export default async function BlogPage({ slug }: blogProps) {
   let blogs: any = [];
-  let blog: any = "";
-  let blogContent: any = [];
+  let blog: any = {};
 
-  await client.getEntry(id).then((res: any) => {
-    blog = res;
-    blogContent = res.fields.blog_content.content;
-  });
-  await client
-    .getEntries({
-      content_type: `${process.env.NEXT_PUBLIC_CONTENTFUL_CONTENT_TYPE_BLOG}`,
+  await cosmic.objects
+    .findOne({
+      type: `${process.env.NEXT_PUBLIC_OBJECT_TYPES}`,
+      slug: slug,
     })
-    .then((res: any) => {
-      blogs = res.items;
+    .then(({ object }) => {
+      blog = object;
+    });
+
+  await cosmic.objects
+    .find({ type: `${process.env.NEXT_PUBLIC_OBJECT_TYPES}` })
+    .then(({ objects }) => {
+      console.log(objects);
+      blogs = objects;
     });
 
   return (
@@ -50,41 +53,23 @@ export default async function BlogPage({ id }: blogProps) {
         <FadeIn>
           <header className="mx-auto flex max-w-5xl flex-col text-center">
             <h1 className="mt-6 font-display text-5xl font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-6xl">
-              {blog.fields.blog_title}
+              {blog.metadata.blog_title}
             </h1>
-            <time dateTime={blog.fields.date} className="order-first text-sm text-neutral-950">
-              {blog.fields.date}
+            <time
+              dateTime={blog.metadata.blog_published}
+              className="order-first text-sm text-neutral-950"
+            >
+              {blog.metadata.blog_published}
             </time>
             <p className="mt-6 text-sm font-semibold text-neutral-950">
-              by {blog.fields.authorName}, {blog.fields.role}
+              by {blog.metadata.author_name}, {blog.metadata.author_role}
             </p>
           </header>
         </FadeIn>
 
         <FadeIn>
           <div className="mx-auto mt-24 flex max-w-5xl flex-col sm:mt-32 lg:mt-40">
-            {blogContent.map((el: any, index: any) => {
-              return (
-                <div key={index} className="mx-auto max-w-[768px]">
-                  {el.nodeType == "embedded-asset-block" && (
-                    <Image
-                      src={`http://${el.data.target.fields.file.url}`}
-                      alt={`${el.data.target.fields.title}`}
-                      width={768}
-                      height={480}
-                      className="my-12 max-h-[480px] w-full rounded-4xl"
-                    />
-                  )}
-                  {el.content.map((el: any, index: any) => {
-                    return (
-                      <div key={index} className="my-6 text-justify text-xl font-normal leading-9">
-                        {el.value}
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })}
+            {blog.metadata.blog_description}
           </div>
         </FadeIn>
       </Container>
@@ -103,26 +88,26 @@ export default async function BlogPage({ id }: blogProps) {
 
           <Container className={"mt-16"}>
             <FadeInStagger className="grid grid-cols-1 gap-x-8 gap-y-16 lg:grid-cols-2">
-              {blogs.map((blog: any, index: any) => (
-                <FadeIn key={index}>
-                  <article key={index}>
+              {blogs.map((blog: any) => (
+                <FadeIn key={blog.id}>
+                  <article key={blog.id}>
                     <Border position="left" className="relative flex flex-col items-start pl-8">
                       <h3 className="mt-6 text-base font-semibold text-neutral-950">
-                        {blog.fields.blog_title}
+                        {blog.metadata.blog_title}
                       </h3>
                       <time
-                        dateTime={blog.fields.date}
+                        dateTime={blog.metadata.blog_published}
                         className="order-first text-sm text-neutral-600"
                       >
-                        {blog.fields.date}
+                        {blog.metadata.blog_published}
                       </time>
                       <p className="mt-2.5 text-base text-neutral-600">
-                        {blog.fields.blog_sub_title}
+                        {blog.metadata.blog_sub_title}
                       </p>
                       <Link
-                        href={`${blog.sys.id}`}
+                        href={`${blog.slug}`}
                         className="mt-6 flex gap-x-3 text-base font-semibold text-neutral-950 transition hover:text-neutral-700"
-                        aria-label={`Read more: ${blog.fields.blog_title}`}
+                        aria-label={`Read more: ${blog.metadata.blog_title}`}
                       >
                         Read more
                         <ArrowIcon className="w-6 flex-none fill-current" />
