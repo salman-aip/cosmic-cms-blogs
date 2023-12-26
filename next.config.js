@@ -3,7 +3,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: "images.ctfassets.net",
+        protocol: "https",
+        hostname: "cdn.cosmicjs.com",
       },
     ],
   },
