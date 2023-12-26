@@ -1,0 +1,33 @@
+{
+  "name": "contentful-cms-blog",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@cosmicjs/sdk": "^1.0.11",
+    "clsx": "^2.0.0",
+    "contentful": "^10.6.14",
+    "contentful-management": "^11.5.6",
+    "framer-motion": "^10.16.12",
+    "next": "14.0.3",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-paginate": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.3",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
+  }
+}
