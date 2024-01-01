@@ -24,41 +24,20 @@ function NewsletterForm() {
 
   function handleNewsLetter(e: any) {
     e.preventDefault();
-    setEmail("");
 
     if (email) {
       cosmic.objects
         .insertOne({
-          _type: "news-letter",
           title: email,
+          type: "news-letters",
           slug: email,
           metadata: {
             email: email,
           },
         })
         .then((res) => {
-          console.log(res);
+          setEmail("");
         });
-      // cosmic.objects
-      //   .find({ type: "news-letter" })
-      //   .props("")
-      //   .then(({ objects }) => {
-      //     console.log(objects.length, objects);
-      //     if (objects) {
-      //       cosmic.objects
-      //         .insertOne({
-      //           type: "news-letter",
-      //           title: email,
-      //           slug: email,
-      //           metadata: {
-      //             email: email,
-      //           },
-      //         })
-      //         .then((res) => {
-      //           console.log(res);
-      //         });
-      //     }
-      //   });
     }
   }
 
@@ -76,6 +55,7 @@ function NewsletterForm() {
           placeholder="Email address"
           autoComplete="email"
           aria-label="Email address"
+          value={email}
           className="block w-full rounded-2xl border border-neutral-300 bg-transparent py-4 pl-6 pr-20 text-base/6 text-neutral-950 ring-4 ring-transparent transition placeholder:text-neutral-500 focus:border-neutral-950 focus:outline-none focus:ring-neutral-950/5"
           onChange={(e) => setEmail(e.target.value)}
         />
